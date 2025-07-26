@@ -52,7 +52,7 @@ The scraper supports powerful filtering capabilities to target specific types of
 ```python
 from kulanjobs_scraper import KulanJobsScraper
 
-# Create scraper
+# Create scraper with default keywords
 scraper = KulanJobsScraper(delay=2)
 
 # Example 1: WASH consultancy jobs in East Africa (last 20 days)
@@ -77,6 +77,52 @@ filters = {
     'themes': ['Livelihoods', 'Displacement & Protection'],
     'geographic_focus': ['Horn of Africa', 'Somalia'],
     'max_days_ago': 25
+}
+jobs = scraper.scrape_all_jobs(max_pages=3, filters=filters)
+```
+
+### Custom Keywords
+
+You can pass your own thematic, project, and geographic keywords as parameters:
+
+```python
+# Define custom thematic keywords
+custom_themes = {
+    'Climate & Environment': [
+        'climate change', 'environmental protection', 'renewable energy', 
+        'sustainability', 'carbon footprint', 'climate adaptation'
+    ],
+    'Education': [
+        'education', 'teaching', 'curriculum', 'pedagogy', 'literacy',
+        'teacher training', 'educational technology'
+    ]
+}
+
+# Define custom project keywords
+custom_project_keywords = [
+    'software engineer', 'data scientist', 'project manager', 
+    'business analyst', 'marketing specialist'
+]
+
+# Define custom geographic keywords
+custom_geographic_keywords = [
+    'west africa', 'ghana', 'nigeria', 'senegal', 'cameroon'
+]
+
+# Create scraper with custom keywords
+scraper = KulanJobsScraper(
+    delay=2,
+    custom_thematic_keywords=custom_themes,
+    custom_project_keywords=custom_project_keywords,
+    custom_geographic_keywords=custom_geographic_keywords
+)
+
+# Use custom themes in filters
+filters = {
+    'themes': ['Climate & Environment', 'Education'],
+    'require_project_keywords': True,
+    'geographic_focus': ['West Africa', 'Ghana'],
+    'max_days_ago': 20
 }
 jobs = scraper.scrape_all_jobs(max_pages=3, filters=filters)
 ```
@@ -114,6 +160,17 @@ This script demonstrates:
 - Livelihoods and displacement jobs
 - Recent consultancy opportunities (last 20 days)
 - Custom boolean-like searches
+
+**`custom_keywords_example.py`** - Custom keywords examples:
+```bash
+python custom_keywords_example.py
+```
+
+This script demonstrates:
+- Custom thematic keywords (Climate & Environment, Education, etc.)
+- Custom project keywords (Software Engineer, Data Scientist, etc.)
+- Custom geographic keywords (West Africa, Central Africa, etc.)
+- Combining all custom keyword types
 
 **`example_usage.py`** - Basic usage examples:
 ```bash

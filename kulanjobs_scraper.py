@@ -24,7 +24,8 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger(__name__)
 
 class KulanJobsScraper:
-    def __init__(self, base_url="https://kulanjobs.com", delay=1):
+    def __init__(self, base_url="https://kulanjobs.com", delay=1, custom_thematic_keywords=None, 
+                 custom_project_keywords=None, custom_geographic_keywords=None):
         self.base_url = base_url
         self.delay = delay  # Delay between requests to be respectful
         self.session = requests.Session()
@@ -33,8 +34,8 @@ class KulanJobsScraper:
         })
         self.jobs = []
         
-        # Define thematic keywords for filtering
-        self.thematic_keywords = {
+        # Define default thematic keywords for filtering
+        default_thematic_keywords = {
             'WASH': [
                 'wash', 'water supply', 'sanitation', 'hygiene promotion', 'hygiene behavior change',
                 'water resource management', 'wastewater', 'handwashing', 'open defecation',
@@ -62,8 +63,11 @@ class KulanJobsScraper:
             ]
         }
         
-        # Project type/activity keywords
-        self.project_keywords = [
+        # Use custom keywords if provided, otherwise use defaults
+        self.thematic_keywords = custom_thematic_keywords if custom_thematic_keywords else default_thematic_keywords
+        
+        # Default project type/activity keywords
+        default_project_keywords = [
             'consultancy', 'evaluation', 'baseline', 'endline', 'impact assessment', 'research',
             'feasibility study', 'technical assistance', 'capacity building', 'program design',
             'third-party monitoring', 'proposal development', 'needs assessment',
@@ -71,12 +75,16 @@ class KulanJobsScraper:
             'strategic planning', 'monitoring', 'assessment', 'consultant'
         ]
         
-        # Geographic/contextual keywords
-        self.geographic_keywords = [
+        self.project_keywords = custom_project_keywords if custom_project_keywords else default_project_keywords
+        
+        # Default geographic/contextual keywords
+        default_geographic_keywords = [
             'kenya', 'uganda', 'ethiopia', 'somalia', 'somaliland', 'horn of africa',
             'sub-saharan africa', 'fragile contexts', 'post-conflict settings',
             'east africa', 'africa'
         ]
+        
+        self.geographic_keywords = custom_geographic_keywords if custom_geographic_keywords else default_geographic_keywords
     
     def get_page(self, url):
         """Fetch a page with error handling and rate limiting."""
